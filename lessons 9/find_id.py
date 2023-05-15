@@ -20,7 +20,7 @@ def max_female_group(path):
             female_count = 0
 
             for data in group['people']:
-                if data['gender'] == 'Female' and data['year'] > 1997:
+                if data['gender'] == 'Female' and data['year'] > 1977:
                     female_count += 1
 
             if female_count > max_female:
