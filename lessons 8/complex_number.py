@@ -2,31 +2,51 @@
 # А так же правильного отображение их в консоли(magic method __str__).
 
 class ComplexNumber:
-    def __init__(self, real_part, imaginary_part):
-        self.real_part = real_part
-        self.imaginary_part = imaginary_part
+    def __init__(self, real, imaginary):
+        self.real = real
+        self.imaginary = imaginary
 
+# [FIXED] Хотелось бы еще видеть проверку, что other является инстансом класса ComplexNumber
     def __add__(self, other):
-        real_part = self.real_part + other.real_part
-        imaginary_part = self.imaginary_part + other.imaginary_part
-        return ComplexNumber(real_part, imaginary_part)
+        if isinstance(other, ComplexNumber):
+            real = self.real + other.real
+            imaginary = self.imaginary + other.imaginary
+            return ComplexNumber(real, imaginary)
+        else:
+            raise TypeError("Unsupported operand type for +")
 
     def __sub__(self, other):
-        real_part = self.real_part - other.real_part
-        imaginary_part = self.imaginary_part - other.imaginary_part
-        return ComplexNumber(real_part, imaginary_part)
+        if isinstance(other, ComplexNumber):
+            real = self.real - other.real
+            imaginary = self.imaginary - other.imaginary
+            return ComplexNumber(real, imaginary)
+        else:
+            raise TypeError("Unsupported operand type for -")
 
     def __eq__(self, other):
-        return self.real_part == other.real_part and self.imaginary_part == other.imaginary_part
+        if isinstance(other, ComplexNumber):
+            return self.real == other.real and self.imaginary == other.imaginary
+        else:
+            return False
 
     def __str__(self):
-        if self.imaginary_part >= 0:
-            return f"{self.real_part}+{self.imaginary_part}i"
+        if self.imaginary >= 0:
+            return f"{self.real} + {self.imaginary}i"
         else:
-            return f"{self.real_part}{self.imaginary_part}i"
+            return f"{self.real} - {abs(self.imaginary)}i"
 
 
-a = ComplexNumber(1, 2)
-b = ComplexNumber(3, -4)
-c = a + b
-print(c)
+if __name__ == '__main__':
+    a = ComplexNumber(2, 3)
+    b = ComplexNumber(1, 4)
+    c = 5
+
+    result = a + b
+    print(result)
+
+    result = a + c  # Будет вызвано исключение TypeError
+
+    result = a - b
+    print(result)
+
+    result = a - c  # Будет вызвано исключение TypeError

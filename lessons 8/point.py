@@ -47,10 +47,12 @@ class Square:
             return None
 
 
-p1 = Point(6, 0)
-p2 = Point(10, 1)
-p3 = Point(1, 0)
+if __name__ == '__main__':
+    # [FIXED] Данные примеры работы класса необходимо писать в мейне, иначе при импорте этот код будет выполнен.
 
+    p1 = Point(6, 0)
+    p2 = Point(10, 1)
+    p3 = Point(1, 0)
 
-t = Triangle(p1, p2, p3)
-print("Площадь треугольника:", t.area())
+    t = Triangle(p1, p2, p3)
+    print("Площадь треугольника:", t.area())

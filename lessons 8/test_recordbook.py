@@ -2,61 +2,75 @@ import unittest
 from recordbook import Record, Directory
 
 
-class TestRecord(unittest.TestCase):
-    def test_init(self):
-        r = Record('John', '123456')
-        self.assertEqual(r.name, 'John')
-        self.assertEqual(r.surname, '')
-        self.assertEqual(r.phone, '123456')
-        self.assertEqual(r.birth_date, '')
+class RecordTestCase(unittest.TestCase):
+    def test_valid_record(self):
+        record = Record("John", "1234567890")
+        self.assertEqual(record.name, "John")
+        self.assertIsNone(record.surname)
+        self.assertEqual(record.phone, "1234567890")
+        self.assertIsNone(record.date_of_birth)
 
-        r = Record('John', '123456', 'Doe', '1990-01-01')
-        self.assertEqual(r.name, 'John')
-        self.assertEqual(r.surname, 'Doe')
-        self.assertEqual(r.phone, '123456')
-        self.assertEqual(r.birth_date, '1990-01-01')
+    def test_valid_record_with_optional_fields(self):
+        record = Record("John", "1234567890", "Doe", "1990-01-01")
+        self.assertEqual(record.name, "John")
+        self.assertEqual(record.surname, "Doe")
+        self.assertEqual(record.phone, "1234567890")
+        self.assertEqual(record.date_of_birth, "1990-01-01")
 
-    def test_str(self):
-        r = Record('John', '123456', 'Doe', '1990-01-01')
-        self.assertEqual(str(r), 'John Doe 123456 1990-01-01')
+    def test_invalid_name(self):
+        with self.assertRaises(ValueError):
+            Record("John1", "1234567890")
+
+    def test_invalid_phone(self):
+        with self.assertRaises(ValueError):
+            Record("John", "12345a67890")
+
+    def test_invalid_date_of_birth(self):
+        with self.assertRaises(ValueError):
+            Record("John", "1234567890", "Doe", "1990-01-xx")
 
 
-class TestDirectory(unittest.TestCase):
-    def test_init(self):
-        d = Directory()
-        self.assertEqual(len(d.records), 3)
+class DirectoryTestCase(unittest.TestCase):
+    # [FIXED] Повторяющееся создание записи в тесте должно быть вынесено в setUp метод
+    def setUp(self):
+        self.directory = Directory()
+
+    def test_initial_records(self):
+        records = self.directory.get_all_records()
+        self.assertEqual(len(records), 3)
 
     def test_add_record(self):
-        d = Directory()
-        d.add_record('John', '123456')
-        self.assertEqual(len(d.records), 4)
-        self.assertEqual(d.records[-1].name, 'John')
-        self.assertEqual(d.records[-1].surname, '')
-        self.assertEqual(d.records[-1].phone, '123456')
-        self.assertEqual(d.records[-1].birth_date, '')
+        record = Record("Test", "9876543210")
+        self.directory.add_record(record)
+        records = self.directory.get_all_records()
+        self.assertEqual(len(records), 4)
+        self.assertIn(record, records)
 
     def test_remove_record(self):
-        d = Directory()
-        d.remove_record(0)
-        self.assertEqual(len(d.records), 3)
+        record = self.directory.get_all_records()[0]
+        self.directory.remove_record(record)
+        records = self.directory.get_all_records()
+        self.assertEqual(len(records), 2)
+        self.assertNotIn(record, records)
 
-        # Emergency services cannot be removed
-        d.remove_record(2)
-        self.assertEqual(len(d.records), 3)
+    def test_remove_nonexistent_record(self):
+        record = Record("Nonexistent", "9999999999")
+        with self.assertRaises(ValueError):
+            self.directory.remove_record(record)
 
     def test_edit_record(self):
-        d = Directory()
-        d.edit_record(0, 'Jane', '654321', 'Doe', '1990-01-01')
-        self.assertEqual(d.records[0].name, 'Jane')
-        self.assertEqual(d.records[0].surname, 'Doe')
-        self.assertEqual(d.records[0].phone, '654321')
-        self.assertEqual(d.records[0].birth_date, '1990-01-01')
+        record = self.directory.get_all_records()[0]
+        new_name = "New Name"
+        new_surname = "New Surname"
+        new_phone = "1111111111"
+        new_date_of_birth = "1990-02-02"
+        self.directory.edit_record(record, new_name, new_surname, new_phone, new_date_of_birth)
+        updated_record = self.directory.get_all_records()[0]
+        self.assertEqual(updated_record.name, new_name)
+        self.assertEqual(updated_record.surname, new_surname)
+        self.assertEqual(updated_record.phone, new_phone)
+        self.assertEqual(updated_record.date_of_birth, new_date_of_birth)
 
-        # Emergency services cannot be edited
-        d.edit_record(2, 'Fire department', '101', '', '')
-        self.assertEqual(d.records[2].name, 'Fire department')
-        self.assertEqual(d.records[2].phone, '101')
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
