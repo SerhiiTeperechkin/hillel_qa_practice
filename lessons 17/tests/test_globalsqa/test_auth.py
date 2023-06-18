@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
 import random
-from ..configuration import *
+from ..conftest import *
 
 
 class Test_Authorization:

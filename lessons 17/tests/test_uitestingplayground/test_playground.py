@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from ..configuration import *
+from ..conftest import *
 from ..verification_constants import Verification_Constants
 
 
