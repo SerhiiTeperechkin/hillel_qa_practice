@@ -1,10 +1,13 @@
 from selenium.webdriver.common.by import By
 from ..conftest import *
 from ..verification_constants import Verification_Constants
+import allure
 
 
+@allure.story('Test for Transaction on globalsqa')
 class Test_Transaction:
-
+    @allure.title('Deposit test')
+    @allure.description('Checking for the correctness of the deposit and the correctness of its display')
     def test_deposit(self, authorization):
         deposit_value = 5000
         authorization.driver.get('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login')
@@ -19,6 +22,8 @@ class Test_Transaction:
         assert authorization.search_element(By.XPATH, '/html/body/div/div/div[2]/div/div[4]/div/span').text == 'Deposit Successful'
         assert int(current_balance) + deposit_value == int(after_deposit_balance)
 
+    @allure.title('Invalid withdrawal test')
+    @allure.description('Check if the amount will exceed the balance')
     def test_invalid_withdrawal(self, authorization):
         authorization.driver.get('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login')
         authorization.search_element(By.XPATH, '/html/body/div/div/div[2]/div/div[1]/div[1]/button').click()
@@ -32,6 +37,8 @@ class Test_Transaction:
             assert authorization.search_element(By.XPATH, '/html/body/div/div/div[2]/div/div[4]/div/span').text == \
                    Verification_Constants.INVALID_WITHDRAWAL.value
 
+    @allure.title('Valid withdrawal test')
+    @allure.description('Check if the amount will not exceed the balance')
     def test_valid_withdrawal(self, authorization):
         authorization.driver.get('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login')
         authorization.search_element(By.XPATH, '/html/body/div/div/div[2]/div/div[1]/div[1]/button').click()

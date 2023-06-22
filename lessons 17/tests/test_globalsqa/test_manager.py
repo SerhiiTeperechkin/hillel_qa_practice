@@ -1,10 +1,14 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from ..conftest import *
 from ..verification_constants import Verification_Constants
+import allure
 
 
+@allure.story('Test for ManagerPanel on globalsqa')
 class Test_ManagerPanel:
-
+    @allure.title('Add customer test')
+    @allure.description('Checking for correct addition of customer')
     def test_add_customer(self, authorization):
         authorization.driver.get('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login')
         authorization.search_element(By.XPATH, '/html/body/div/div/div[2]/div/div[1]/div[2]/button').click()
@@ -21,6 +25,8 @@ class Test_ManagerPanel:
         authorization.driver.switch_to.alert.accept()
         assert alert_text == Verification_Constants.ADD_CUSTOMER.value
 
+    @allure.title('Open account test')
+    @allure.description('Checking for correct open account of customer')
     def test_open_account(self, authorization):
         authorization.driver.get('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login')
         authorization.search_element(By.XPATH, '/html/body/div/div/div[2]/div/div[1]/div[2]/button').click()
@@ -41,6 +47,8 @@ class Test_ManagerPanel:
         assert authorization.wait.until(EC.alert_is_present())
         authorization.driver.switch_to.alert.accept()
 
+    @allure.title('Delete customer test')
+    @allure.description('Check for correct deletion of customers from the table')
     def test_delete_customer(self, authorization):
         data = {'first_name': 'Serega',
                 'second_name': 'Pushkin',

@@ -1,10 +1,13 @@
 from selenium.webdriver.common.by import By
 import random
 from ..conftest import *
+import allure
 
 
+@allure.story('Test for Authorization on globalsqa')
 class Test_Authorization:
-
+    @allure.title('Valid login test')
+    @allure.description('Check the login when the data is correct')
     def test_valid_login(self, authorization):
         login_names = []
         authorization.driver.get('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login')
@@ -18,6 +21,8 @@ class Test_Authorization:
         assert authorization.search_element(By.XPATH, '/html/body/div/div/div[2]/div/div[1]/strong').text == \
                f'Welcome {random_login_choice} !!'
 
+    @allure.title('Invalid login test')
+    @allure.description('Check the login when the data is incorrect')
     def test_invalid_login(self, authorization):
         login_names = []
         authorization.driver.get('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login')
@@ -28,6 +33,8 @@ class Test_Authorization:
         user_login_name = 'Serega Pushkin'
         assert user_login_name not in login_names
 
+    @allure.title('Logout test')
+    @allure.description('check for proper logout')
     def test_logout(self, authorization):
         login_names = []
         authorization.driver.get('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login')
